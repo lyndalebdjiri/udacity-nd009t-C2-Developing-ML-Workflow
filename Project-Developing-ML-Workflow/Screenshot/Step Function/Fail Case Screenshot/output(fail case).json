@@ -1,0 +1,8 @@
+{
+  "errorMessage": "THRESHOLD_CONFIDENCE_NOT_MET",
+  "errorType": "Exception",
+  "requestId": "f057db35-8d32-4f79-adb1-9cbd08c4e3ac",
+  "stackTrace": [
+    "  File \"/var/task/lambda_function.py\", line 19, in lambda_handler\n    raise Exception(\"THRESHOLD_CONFIDENCE_NOT_MET\")\n"
+  ]
+}
