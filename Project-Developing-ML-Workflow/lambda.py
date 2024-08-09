@@ -7,7 +7,7 @@ from sagemaker.serializers import IdentitySerializer
 
 s3 = boto3.client('s3')
 
-def lambda_handler(event, context):
+def lambda_handler_serialize(event, context):
     """A function to serialize target data from S3"""
 
     # Get the s3 address from the Step Function event input
@@ -36,7 +36,7 @@ def lambda_handler(event, context):
 # Fill this in with the name of your deployed model
 ENDPOINT = "image-classification-2024-08-09-03-50-35-740"
 
-def lambda_handler(event, context):
+def lambda_handler_predict(event, context):
 
     # Decode the image data
     image = base64.b64decode(event['image_data'])
@@ -69,7 +69,7 @@ def lambda_handler(event, context):
 
 THRESHOLD = .93
 
-def lambda_handler(event, context):
+def lambda_handler_threshold(event, context):
 
     # Grab the inferences from the event
     inferences = json.loads(event['inferences'])
