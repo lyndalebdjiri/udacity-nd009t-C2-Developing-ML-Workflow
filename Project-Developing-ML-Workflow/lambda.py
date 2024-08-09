@@ -2,7 +2,6 @@ import json
 import boto3
 import base64
 import sagemaker
-import base64
 from sagemaker.serializers import IdentitySerializer
 
 
@@ -24,17 +23,18 @@ def lambda_handler(event, context):
 
     # Pass the data back to the Step Function
     return {
-        'statusCode': 200,
-        'body': {
-            "image_data": image_data.decode('utf-8'),
-            "s3_bucket": bucket,
-            "s3_key": key,
-            "inferences": []
-        }
+        "statusCode": 200,
+        "image_data": image_data.decode('utf-8'),
+        "s3_bucket": bucket,
+        "s3_key": key,
+        "inferences": []
     }
 
+
+
+
 # Fill this in with the name of your deployed model
-ENDPOINT = endpoint
+ENDPOINT = "image-classification-2024-08-09-03-50-35-740"
 
 def lambda_handler(event, context):
 
@@ -50,12 +50,21 @@ def lambda_handler(event, context):
     # Make a prediction:
     inferences = predictor.predict(image)
 
-    # We return the data back to the Step Function    
-    event["inferences"] = inferences.decode('utf-8')
+    # Converting the inferences to a list of floats
+    inferences = json.loads(inferences.decode('utf-8'))
+
+    # Converting the inferences list to a JSON string
+    inferences_str = json.dumps(inferences)
+
+    # We return the data back to the Step Function 
     return {
-        'statusCode': 200,
-        'body': json.dumps(event)
+        "statusCode": 200,
+        "image_data": event['image_data'],
+        "s3_bucket": event['s3_bucket'],
+        "s3_key": event['s3_key'],
+        "inferences": inferences_str
     }
+
 
 
 THRESHOLD = .93
@@ -79,4 +88,3 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': json.dumps(event)
     }
-
